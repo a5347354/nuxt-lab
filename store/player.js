@@ -3,7 +3,7 @@ export const state = () => ({
     // 曲目列表中的索引 [-1=無]
     trackIndex: -1,
     // 音樂資料 (deep copy)
-    targetTrack: null
+    targetTrack: null,
   },
   // 播放設定
   config: {
@@ -24,15 +24,15 @@ export const state = () => ({
     // 重複播放[0=無|1=單歌重複]
     repeat: 0,
     // 當前正在播放的歌曲中 UUID
-    uuid: null
-  }
+    uuid: null,
+  },
 })
 
 export const getters = {
-  getTotalTime (state) {
+  getTotalTime(state) {
     return state.config.totalTime
   },
-  getNowTime (state) {
+  getNowTime(state) {
     return state.config.nowTime
   },
   /**
@@ -48,87 +48,87 @@ export const getters = {
    */
   isPlayerMuted(state) {
     return Boolean(state.config.volume === 0)
-  }
+  },
 }
 
 export const mutations = {
   /**
-     * 正在播放的曲目 > 插入曲目索引
-     * @param player
-     * @param trackIndex 索引
-     */
-  SET_NEXT_TRACK_INDEX (player, trackIndex) {
+   * 正在播放的曲目 > 插入曲目索引
+   * @param player
+   * @param trackIndex 索引
+   */
+  SET_NEXT_TRACK_INDEX(player, trackIndex) {
     if (player.nextTrack.trackIndex !== trackIndex) {
       player.nextTrack.trackIndex = trackIndex
     }
   },
-  SET_TRACK_INDEX (player, trackIndex) {
+  SET_TRACK_INDEX(player, trackIndex) {
     if (player.nowTrack.trackIndex !== trackIndex) {
       player.nowTrack.trackIndex = trackIndex
     }
   },
   /**
-     * 總播放時間
-     * @param player
-     * @param time 時間（秒）
-     */
-  SET_TOTAL_TIME (player, time) {
+   * 總播放時間
+   * @param player
+   * @param time 時間（秒）
+   */
+  SET_TOTAL_TIME(player, time) {
     player.config.totalTime = time
   },
   /**
-     * 設定目前歌曲進度
-     * @param player
-     * @param time 時間（秒）
-     */
-  SET_NOW_TIME (player, time) {
+   * 設定目前歌曲進度
+   * @param player
+   * @param time 時間（秒）
+   */
+  SET_NOW_TIME(player, time) {
     player.config.nowTime = time
   },
   /**
-     * 是否播放
-     * @param player
-     * @param isPlay 是否播放 [true/false]
-     */
-  SET_IS_PLAY (player, isPlay) {
+   * 是否播放
+   * @param player
+   * @param isPlay 是否播放 [true/false]
+   */
+  SET_IS_PLAY(player, isPlay) {
     player.config.isPlay = isPlay
   },
   /**
-     * 是否暫停
-     * @param player
-     * @param isPause 是否暫停 [true/false]
-     */
-  SET_IS_PAUSE (player, isPause) {
+   * 是否暫停
+   * @param player
+   * @param isPause 是否暫停 [true/false]
+   */
+  SET_IS_PAUSE(player, isPause) {
     player.config.isPause = isPause
   },
-  SET_AUDIO (player, audio) {
+  SET_AUDIO(player, audio) {
     player.config.audio = audio
   },
-  SET_AUDIO_SRC (player, src) {
+  SET_AUDIO_SRC(player, src) {
     player.config.audio.src = src
     player.config.audio.load()
   },
   /**
-     * 設定音量
-     * @param player
-     * @param volume 音量 [0~1]
-     */
-  SET_VOLUME (player, volume) {
+   * 設定音量
+   * @param player
+   * @param volume 音量 [0~1]
+   */
+  SET_VOLUME(player, volume) {
     player.config.volume = volume
   },
   /**
-     * 設定是否為加載狀態
-     * @param player
-     * @param isLoading 是否加載 [true/false]
-     */
-  SET_IS_LOADING (player, isLoading) {
+   * 設定是否為加載狀態
+   * @param player
+   * @param isLoading 是否加載 [true/false]
+   */
+  SET_IS_LOADING(player, isLoading) {
     player.config.isLoading = isLoading
-  }
+  },
 }
 
 export const actions = {
   /** Create a audio tag in html and enroll hooks of the audio
-   * @param {*} param0 
+   * @param {*} param0
    */
-  init ({ state, commit, dispatch }) {
+  init({ state, commit, dispatch }) {
     if (window) {
       // For cypress
       window.getPlayerAudio = () => state.config.audio
@@ -155,7 +155,7 @@ export const actions = {
           const nowTime = Math.floor(state.config.audio.currentTime)
           if (
             nowTime < state.config.nowTime ||
-              nowTime >= state.config.nowTime + 1
+            nowTime >= state.config.nowTime + 1
           ) {
             commit('SET_NOW_TIME', nowTime)
           }
@@ -182,17 +182,17 @@ export const actions = {
     }
   },
   /**
-     * 停止當前曲目
-     * @param {Object} context
-     */
-  stop ({ state, commit }) {
+   * 停止當前曲目
+   * @param {Object} context
+   */
+  stop({ state, commit }) {
     if (state.config.audio) {
       state.config.audio.pause()
       commit('SET_NOW_TIME', 0)
       commit('SET_IS_LOADING', false)
     }
   },
-  playOrPause ({ state, commit, dispatch }) {
+  playOrPause({ state, commit, dispatch }) {
     const trackIndex = state.nextTrack.trackIndex
     if (trackIndex >= 0) {
       if (trackIndex !== state.nowTrack.trackIndex) {
@@ -208,7 +208,7 @@ export const actions = {
       }
     }
   },
-  playTrack (
+  playTrack(
     { state, commit, dispatch, rootState, rootGetters },
     { trackIndex }
   ) {
@@ -217,7 +217,8 @@ export const actions = {
     try {
       commit('SET_TRACK_INDEX', trackIndex)
       commit('SET_NOW_TIME', 0)
-      const src = 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3'
+      const src =
+        'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3'
       commit('SET_AUDIO_SRC', src)
       state.config.audio.play()
     } catch (err) {
@@ -226,7 +227,7 @@ export const actions = {
       commit('SET_IS_LOADING', false)
     }
   },
-  setVolume ({ state }, volume) {
+  setVolume({ state }, volume) {
     state.config.audio.volume = volume
-  }
+  },
 }
