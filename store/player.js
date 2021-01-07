@@ -57,11 +57,6 @@ export const mutations = {
    * @param player
    * @param trackIndex 索引
    */
-  SET_NEXT_TRACK_INDEX(player, trackIndex) {
-    if (player.nextTrack.trackIndex !== trackIndex) {
-      player.nextTrack.trackIndex = trackIndex
-    }
-  },
   SET_TRACK_INDEX(player, trackIndex) {
     if (player.nowTrack.trackIndex !== trackIndex) {
       player.nowTrack.trackIndex = trackIndex
@@ -193,8 +188,9 @@ export const actions = {
     }
   },
   playOrPause({ state, commit, dispatch }) {
-    const trackIndex = state.nextTrack.trackIndex
+    const trackIndex = state.nowTrack.trackIndex
     if (trackIndex >= 0) {
+      console.log(trackIndex)
       if (trackIndex !== state.nowTrack.trackIndex) {
         commit('SET_IS_PLAY', false)
         commit('SET_IS_PAUSE', false)
@@ -217,12 +213,11 @@ export const actions = {
     try {
       commit('SET_TRACK_INDEX', trackIndex)
       commit('SET_NOW_TIME', 0)
-      const src =
-        'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3'
+      const src = `https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3`
       commit('SET_AUDIO_SRC', src)
       state.config.audio.play()
     } catch (err) {
-      this.$sentry.captureException(err)
+      console.log(err)
     } finally {
       commit('SET_IS_LOADING', false)
     }
