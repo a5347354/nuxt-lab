@@ -22,7 +22,7 @@ export const state = () => ({
     // 是否加載中 [true/false]
     isLoading: false,
     // 重複播放[0=無|1=單歌重複]
-    repeat: 0,
+    repeat: 1,
     // 當前正在播放的歌曲中 UUID
     uuid: null,
   },
@@ -133,7 +133,6 @@ export const actions = {
       audio.oncanplay = () => {
         // 完成音樂信息的加載 seek 也會觸發此 event
         commit('SET_TOTAL_TIME', Number(state.config.audio.duration))
-        commit('SET_LIMIT_TIME', Number(state.config.audio.duration))
         commit('SET_IS_LOADING', false)
       }
       audio.onplay = () => {
@@ -190,7 +189,6 @@ export const actions = {
   playOrPause({ state, commit, dispatch }) {
     const trackIndex = state.nowTrack.trackIndex
     if (trackIndex >= 0) {
-      console.log(trackIndex)
       if (trackIndex !== state.nowTrack.trackIndex) {
         commit('SET_IS_PLAY', false)
         commit('SET_IS_PAUSE', false)
